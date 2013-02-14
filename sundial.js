@@ -54,8 +54,8 @@ var dialDaytime = new Kinetic.Shape ({
 		var r = 0.00432;
 		var riseTime = times.sunrise;
 		var setTime = times.sunset;
-		var riseAngle = (getDialAngle(riseTime) * r) + 1;
-		var setAngle = (getDialAngle(setTime) * r * Math.PI) + (1*Math.PI);
+		var riseAngle = (getDialAngle(riseTime) * r);
+		var setAngle = (getDialAngle(setTime) * r * Math.PI);
 		console.log(setAngle);
 		console.log(riseAngle);
 		context.beginPath();
@@ -63,6 +63,7 @@ var dialDaytime = new Kinetic.Shape ({
 		context.fillStrokeShape(this);
 	}
 });
+dialDaytime.rotate(Math.PI * 0.5);
 
 // The 'night' part of the dial
 
@@ -168,6 +169,8 @@ stage.add(sun_layer);
 onUpdateTimeText();
 
 
+
+
 //Set time to keep the dial time updated
 
 setInterval(function() {onUpdateTimeText() }, 1000);
@@ -184,3 +187,4 @@ function onUpdateSunPosition() {
 	sun_circle.setY(getY(current_time));
 	sun_layer.draw();
 }
+
