@@ -1,0 +1,1 @@
+A simple app to show the current position of the sun relative to sunset and sunrise for a given day.
