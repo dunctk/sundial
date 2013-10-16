@@ -5,9 +5,26 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
-		<canvas id="primary" width="600" height="600">
-			Your browser is not supported.
-		</canvas>
-		<script type="text/javascript" src="script.js"></script>
+		<div id="container"></div>
+		<script type="text/javascript" src="kinetic-v4.7.2.min.js"></script>
+		<script defer="defer">
+			var stage = new Kinetic.Stage({
+				container: 'container',
+				width: 600,
+				height: 600
+			});
+			var dial_layer = new Kinetic.Layer();
+
+			var dial_daytime = new Kinetic.Circle({
+				x: stage.getWidth() / 2,
+				y: stage.getHeight() / 2,
+				radius: 250,
+				stroke: '#f0e6a3',
+				strokeWidth: 2
+			});
+
+			dial_layer.add(dial_daytime);
+			stage.add(dial_layer);
+		</script>
 	</body>
 </html>
