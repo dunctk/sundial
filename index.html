@@ -3,6 +3,7 @@
 	<head>
 		<title>Sundial</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link href='http://fonts.googleapis.com/css?family=Exo:100' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
 		<div id="container"></div>
@@ -15,53 +16,108 @@
 			});
 
 			var Dial = new Object();
+				Dial.getAngle = function(time) {
+					var angle = (((time.getHours() * 60) + time.getMinutes()) * 0.25 ) + 90;
+					return angle;
+				};	
 
 			var now = new Date();
 
-			var dial_daytime = new Kinetic.Circle({
+			var dialLayer = new Kinetic.Layer();
+			//Dial with missing part for nighttime
+			var dialDaytime = new Kinetic.Shape ({
+				x: stage.getWidth() / 2,
+				y: stage.getHeight() / 2,
+				stroke: '#f0e6a3',
+				strokeWidth: 3,
+				drawFunc: function(context) {
+					//Draw the daytime part of the dial
+					context.beginPath();
+					context.arc(0, 0, 250, 2.5, 2.2*Math.PI);
+					context.fillStrokeShape(this);
+				}
+			});
+			var dialBase = new Kinetic.Circle({
 				x: stage.getWidth() / 2,
 				y: stage.getHeight() / 2,
 				radius: 250,
-				stroke: '#f0e6a3',
-				strokeWidth: 2
+				stroke: '#969696',
+				strokeWidth: 1
 			});
-			var dial_layer = new Kinetic.Layer();
-			dial_layer.add(dial_daytime);			
+			var dialTime = new Kinetic.Text({
+				x: dialBase.getX() - 100,
+				y: dialBase.getY() - 50,
+	            fontSize: 38,
+	            width: 200,
+	            fontFamily: 'Exo',
+	            fill: '#969696',
+	            align: 'center'
+			});
+			var dialLocation = new Kinetic.Text({
+				x: dialBase.getX() - 100,
+				y: dialBase.getY(),
+	            fontSize: 18,
+	            width: 200,
+	            fontFamily: 'Exo',
+	            fill: '#969696',
+	            align: 'center',
+	            text: 'London, UK'
+			});
+				
+
+			//Keep the dial time updated
+			setInterval(function() {onUpdateTimeText() }, 1000);
+				function onUpdateTimeText() {
+					var now = new Date();
+					dialTime.setText(now.toLocaleTimeString());
+					dialLayer.draw();
+				}
+			
 
 			var Sun = new Object();
+				Sun.getSunrise = function() {
+					var sunrise = new Date ();
+					sunrise.setDate(2013, 9, 17, 8, 0, 0);
+					return(sunrise);
+				};
+				Sun.getX = function() {
+					var angle = Dial.getAngle(now);
+					var x = dialBase.getX() + dialBase.getRadius()  * Math.cos(angle * (Math.PI / 180));
+					return(x);
+				};
+				Sun.getY = function(){
+					var angle = Dial.getAngle(now);
+					var y = dialBase.getY() + dialBase.getRadius()  * Math.sin(angle * (Math.PI / 180));
+					return y;
+				};
+				Sun.draw = function(){
+					var sun_layer = new Kinetic.Layer();
+					var sun_circle = new Kinetic.Circle({
+						x: Sun.getX(),
+						y: Sun.getY(),
+						radius: 30,
+						fill: '#f0e6a3',
+						draggable: false
+					});
+					sun_layer.add(sun_circle);
+					stage.add(sun_layer);
+					//Keep the sun position updated
+					setInterval(function() {onUpdateDial() }, 1000);
+					function onUpdateDial() {
+						var now = new Date();
+						sun_circle.setX(Sun.getX());
+						sun_circle.setY(Sun.getY());
+						sun_layer.draw();
+					}
+				};
 
-			Sun.getAngle = function(time) {
-				var angle = (((time.getHours() * 60) + time.getMinutes()) * 0.25 ) + 90;
-				return angle;
-			};	
-
-			Sun.getX = function() {
-				var angle = Sun.getAngle(now);
-				var x = dial_daytime.getX() + dial_daytime.getRadius()  * Math.cos(angle * (Math.PI / 180));
-				return(x);
-			};
-
-			Sun.getY = function(){
-				var angle = Sun.getAngle(now);
-				var y = dial_daytime.getY() + dial_daytime.getRadius()  * Math.sin(angle * (Math.PI / 180));
-				return y;
-			};
-
-			Sun.draw = function(){
-				var sun_layer = new Kinetic.Layer();
-				var sun_circle = new Kinetic.Circle({
-					x: Sun.getX(),
-					y: Sun.getY(),
-					radius: 30,
-					fill: '#f0e6a3',
-					draggable: false
-				});
-				sun_layer.add(sun_circle);
-				stage.add(sun_layer);
-			};
-
+			
+			dialLayer.add(dialDaytime);
+			dialLayer.add(dialLocation);
+			dialLayer.add(dialTime);
+			dialLayer.add(dialBase);		
+			stage.add(dialLayer);
 			Sun.draw();
-			stage.add(dial_layer);
 			
 			
 		</script>
