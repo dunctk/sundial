@@ -2,7 +2,9 @@ body {
 	background-color: #222;
 }
 
-#primary{
+#container {
 	margin: 0 auto;
-	display: block;
+	width: 600px;
+	height: 600px;
+	margin-top: 50px;
 }

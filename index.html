@@ -13,7 +13,10 @@
 				width: 600,
 				height: 600
 			});
-			var dial_layer = new Kinetic.Layer();
+
+			var Dial = new Object();
+
+			var now = new Date();
 
 			var dial_daytime = new Kinetic.Circle({
 				x: stage.getWidth() / 2,
@@ -22,9 +25,45 @@
 				stroke: '#f0e6a3',
 				strokeWidth: 2
 			});
+			var dial_layer = new Kinetic.Layer();
+			dial_layer.add(dial_daytime);			
 
-			dial_layer.add(dial_daytime);
+			var Sun = new Object();
+
+			Sun.getAngle = function(time) {
+				var angle = (((time.getHours() * 60) + time.getMinutes()) * 0.25 ) + 90;
+				return angle;
+			};	
+
+			Sun.getX = function() {
+				var angle = Sun.getAngle(now);
+				var x = dial_daytime.getX() + dial_daytime.getRadius()  * Math.cos(angle * (Math.PI / 180));
+				return(x);
+			};
+
+			Sun.getY = function(){
+				var angle = Sun.getAngle(now);
+				var y = dial_daytime.getY() + dial_daytime.getRadius()  * Math.sin(angle * (Math.PI / 180));
+				return y;
+			};
+
+			Sun.draw = function(){
+				var sun_layer = new Kinetic.Layer();
+				var sun_circle = new Kinetic.Circle({
+					x: Sun.getX(),
+					y: Sun.getY(),
+					radius: 30,
+					fill: '#f0e6a3',
+					draggable: false
+				});
+				sun_layer.add(sun_circle);
+				stage.add(sun_layer);
+			};
+
+			Sun.draw();
 			stage.add(dial_layer);
+			
+			
 		</script>
 	</body>
 </html>
