@@ -9,6 +9,13 @@
 		<div id="container"></div>
 		<script type="text/javascript" src="kinetic-v4.7.2.min.js"></script>
 		<script defer="defer">
+			navigator.geolocation.getCurrentPosition(GetLocation);
+			function GetLocation(location) {
+			    console.log(location.coords.latitude);
+			    console.log(location.coords.longitude);
+			    console.log(location.coords.accuracy);
+			}
+
 			var stage = new Kinetic.Stage({
 				container: 'container',
 				width: 600,
@@ -31,9 +38,15 @@
 				stroke: '#f0e6a3',
 				strokeWidth: 3,
 				drawFunc: function(context) {
+					//One minute on the dial, in radians
+					var r = 0.00432;
+					var riseTime = Sun.getSunrise();
+					var setTime = Sun.getSunset();
+					var riseAngle = 0 * r;
+					var setAngle = 1380 * r;
 					//Draw the daytime part of the dial
 					context.beginPath();
-					context.arc(0, 0, 250, 2.5, 2.2*Math.PI);
+					context.arc(0, 0, 250, riseAngle, setAngle);
 					context.fillStrokeShape(this);
 				}
 			});
@@ -52,6 +65,16 @@
 	            fontFamily: 'Exo',
 	            fill: '#969696',
 	            align: 'center'
+			});
+			var dialSunriseTime = new Kinetic.Text({
+				x: dialBase.getX() - 350,
+				y: dialBase.getY() + 160,
+	            fontSize: 18,
+	            width: 200,
+	            fontFamily: 'Exo',
+	            fill: '#969696',
+	            align: 'center',
+	            text: '0800'
 			});
 			var dialLocation = new Kinetic.Text({
 				x: dialBase.getX() - 100,
@@ -77,8 +100,15 @@
 			var Sun = new Object();
 				Sun.getSunrise = function() {
 					var sunrise = new Date ();
+					//Placeholder data
 					sunrise.setDate(2013, 9, 17, 8, 0, 0);
 					return(sunrise);
+				};
+				Sun.getSunset = function() {
+					var sunset = new Date ();
+					//Placeholder data
+					sunset.setDate(2013, 9, 17, 8, 0, 0);
+					return(sunset);
 				};
 				Sun.getX = function() {
 					var angle = Dial.getAngle(now);
@@ -115,6 +145,7 @@
 			dialLayer.add(dialDaytime);
 			dialLayer.add(dialLocation);
 			dialLayer.add(dialTime);
+			dialLayer.add(dialSunriseTime);
 			dialLayer.add(dialBase);		
 			stage.add(dialLayer);
 			Sun.draw();
