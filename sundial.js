@@ -147,17 +147,39 @@ var sun = new Kinetic.Circle({
 	draggable: false
 });
 
-var moon_shadow = new Kinetic.Circle({
+var moon_centre_elipse = new Kinetic.Ellipse({
 	x: getX(current_time),
 	y: getY(current_time),
-	radius: 30,
-	fill: '#000'
+	radius: {
+		x: 15,
+		y: 30
+	}
+
 });
-var moon_face = new Kinetic.Circle({
+var moon_full = new Kinetic.Circle({
+	x: getX(current_time),
+	y: getY(current_time),
+	radius: 30
+});
+var moon_half_left = new Kinetic.Circle({
 	x: getX(current_time),
 	y: getY(current_time),
 	radius: 30,
-	fill: '#E6E6E6'
+	drawFunc: function(context) {
+		context.beginPath();
+		context.arc(0, 0, 30, 0.5*Math.PI, 1.5*Math.PI);
+		context.fillStrokeShape(this);
+	}
+});
+var moon_half_right = new Kinetic.Circle({
+	x: getX(current_time),
+	y: getY(current_time),
+	radius: 30,
+	drawFunc: function(context) {
+		context.beginPath();
+		context.arc(0, 0, 30, 1.5*Math.PI, 0.5*Math.PI);
+		context.fillStrokeShape(this);
+	}
 });
 
 // Asign the dial elemnts to layers and draw them
@@ -171,12 +193,66 @@ dialLayer.add(dialSunsetTimeText);
 dialLayer.add(dialBase);	
 stage.add(dialLayer);
 
+function SetMoonPhase(date){
+	//var phase = SunCalc.getMoonFraction(date);
+	var phase = 0.875;
+	switch(phase) {
+		case 0:
+			moon_full.setFill('#000');
+			break;
+
+		case 0.125:
+			moon_centre_elipse.setFill('#000');
+			moon_half_left.setFill('#000');
+			moon_full.setFill('#DEDEDE');
+			break;
+
+		case 0.25:
+			moon_half_right.setFill('#DEDEDE');
+			moon_full.setFill('#000');
+			break;
+
+		case 0.375:
+			moon_centre_elipse.setFill('#DEDEDE');
+			moon_half_right.setFill('#DEDEDE');
+			moon_full.setFill('#000');
+			break;
+
+		case 0.5:
+			moon_full.setFill('#DEDEDE');
+			break;
+
+		case 0.625:
+			moon_centre_elipse.setFill('#DEDEDE');
+			moon_half_left.setFill('#DEDEDE');
+			moon_full.setFill('#000');
+			break;
+
+		case 0.75:
+			moon_half_left.setFill('#DEDEDE');
+			moon_full.setFill('#000');
+			break;
+
+		case 0.875:
+			moon_centre_elipse.setFill('#000');
+			moon_half_right.setFill('#000');
+			moon_full.setFill('#DEDEDE');
+			break;
+
+		case 1:
+			moon_full.setFill('#000');
+			break;
+	};
+};
 
 //Decide whether to show the moon or sun
 
 if (IsNightTime()) {
-	celestial_layer.add(moon_shadow);
-	celestial_layer.add(moon_face);
+	celestial_layer.add(moon_full);
+	celestial_layer.add(moon_half_left);
+	celestial_layer.add(moon_half_right);
+	celestial_layer.add(moon_centre_elipse);
+	SetMoonPhase(current_time);
 } else {
 	celestial_layer.add(sun);
 }
@@ -205,7 +281,7 @@ function onUpdateCelestialPosition() {
 	} else {
 		sun.setX(getX(current_time));
 		sun.setY(getY(current_time));
-	};*/
+	}*/
 	celestial_layer.draw();
 }
 
