@@ -12,3 +12,20 @@ body {
 	height: 600px;
 	margin-top: 50px;
 }
+
+
+#footer {margin-top: 50px;}
+#footer-credits {
+	margin: 0 auto;
+	max-width: 600px;
+	font-family: 'Exo', sans-serif;
+	text-align: center;
+	color: #474644;
+}
+#footer-credits a { color: #474644;}
+#footer-credits li {
+	list-style: none;
+	margin-right: 20px;
+	margin-bottom: 5px;
+	display: inline-block;
+}
