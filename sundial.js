@@ -148,30 +148,18 @@ var sun = new Kinetic.Circle({
 	draggable: false
 });
 
-var moon = new Kinetic.Circle({
+var moon_shadow = new Kinetic.Circle({
 	x: getX(current_time),
 	y: getY(current_time),
 	radius: 30,
-	strokeWidth: 2,
-	stroke: '#E6E6E6'
+	fill: '#000'
 });
-
-
-var test_layer_sunrise = new Kinetic.Circle({
-	x: getX(times.sunrise),
-	y: getY(times.sunrise),
-	radius: 5,
-	fill: 'red'
+var moon_face = new Kinetic.Circle({
+	x: getX(current_time),
+	y: getY(current_time),
+	radius: 30,
+	fill: '#E6E6E6'
 });
-var test_layer_sunset = new Kinetic.Circle({
-	x: getX(times.sunset),
-	y: getY(times.sunset),
-	radius: 5,
-	fill: 'red'
-});
-
-
-
 
 // Asign the dial elemnts to layers and draw them
 
@@ -182,12 +170,14 @@ dialLayer.add(dialTimeText);
 dialLayer.add(dialSunriseTimeText);
 dialLayer.add(dialSunsetTimeText);
 dialLayer.add(dialBase);	
-
 stage.add(dialLayer);
 
-//Todo: Decide whether to show the moon or sun
+
+//Decide whether to show the moon or sun
+
 if (IsNightTime()) {
-	celestial_layer.add(moon);
+	celestial_layer.add(moon_shadow);
+	celestial_layer.add(moon_face);
 } else {
 	celestial_layer.add(sun);
 }
