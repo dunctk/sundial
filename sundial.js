@@ -19,7 +19,7 @@ function GetLongitude(location) {
 
 function IsNightTime(){
 	var current_time = new Date();
-	if (current_time > times.sunset){
+	if ((current_time > times.sunset) || (current_time < times.sunrise))  {
 		return true;
 	} else {
 		return false;
@@ -42,7 +42,6 @@ function getDialAngle(time) {
 };	
 
 var current_time = new Date();
-
 
 // Seperate layer for dial elements
 
@@ -79,8 +78,8 @@ var dialBase = new Kinetic.Circle({
 });
 
 var dialTimeText = new Kinetic.Text({
-	x: dialBase.getX(current_time) - 110,
-	y: dialBase.getY(current_time) - 50,
+	x: dialBase.getX() - 110,
+	y: dialBase.getY() - 50,
     fontSize: 45,
     width: 220,
     fontFamily: 'Exo, sans-serif',
@@ -88,8 +87,8 @@ var dialTimeText = new Kinetic.Text({
     align: 'center'
 });
 var dialSunriseTimeText = new Kinetic.Text({
-	x: dialBase.getX(current_time) - 350,
-	y: dialBase.getY(current_time) + 160,
+	x: dialBase.getX() - 350,
+	y: dialBase.getY() + 160,
     fontSize: 18,
     width: 200,
     fontFamily: 'Exo, sans-serif',
@@ -98,8 +97,8 @@ var dialSunriseTimeText = new Kinetic.Text({
     text: sunriseStr
 });
 var dialSunsetTimeText = new Kinetic.Text({
-	x: dialBase.getX(current_time) + 150,
-	y: dialBase.getY(current_time) + 160,
+	x: dialBase.getX() + 150,
+	y: dialBase.getY() + 160,
     fontSize: 18,
     width: 200,
     fontFamily: 'Exo, sans-serif',
@@ -108,8 +107,8 @@ var dialSunsetTimeText = new Kinetic.Text({
     text: sunsetStr
 });
 var dialDateText = new Kinetic.Text({
-	x: dialBase.getX(current_time) - 100,
-	y: dialBase.getY(current_time),
+	x: dialBase.getX() - 100,
+	y: dialBase.getY(),
     fontSize: 18,
     width: 200,
     fontFamily: 'Exo, sans-serif',
@@ -118,8 +117,8 @@ var dialDateText = new Kinetic.Text({
     text: (moment().format('MMMM Do YYYY'))
 });
 var dialLocationText = new Kinetic.Text({
-	x: dialBase.getX(current_time) - 100,
-	y: dialBase.getY(current_time) + 30,
+	x: dialBase.getX() - 100,
+	y: dialBase.getY() + 30,
     fontSize: 18,
     width: 200,
     fontFamily: 'Exo, sans-serif',
@@ -195,11 +194,18 @@ function onUpdateTimeText() {
 	dialLayer.draw();
 }
 
-setInterval(function() {onUpdateSunPosition() }, 30000);
-function onUpdateSunPosition() {
+setInterval(function() {onUpdateCelestialPosition() }, 30000);
+function onUpdateCelestialPosition() {
 	var current_time = new Date();
-	sun.setX(getX(current_time));
-	sun.setY(getY(current_time));
+	/*if (IsNightTime()){
+		moon_face.setX(getX(current_time));
+		moon_face.setY(getY(current_time));
+		moon_shadow.setX(getX(current_time));
+		moon_shadow.setY(getY(current_time));
+	} else {
+		sun.setX(getX(current_time));
+		sun.setY(getY(current_time));
+	};*/
 	celestial_layer.draw();
 }
 
