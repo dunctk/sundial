@@ -194,52 +194,52 @@ dialLayer.add(dialBase);
 stage.add(dialLayer);
 
 function SetMoonPhase(date){
-	//var phase = SunCalc.getMoonFraction(date);
-	var phase = 0.875;
-	switch(phase) {
-		case 0:
+	var phase = SunCalc.getMoonFraction(date);
+	console.log(phase);
+	switch(true) {
+		case (phase = 0):
 			moon_full.setFill('#000');
 			break;
 
-		case 0.125:
+		case (phase < 0.125):
 			moon_centre_elipse.setFill('#000');
 			moon_half_left.setFill('#000');
 			moon_full.setFill('#DEDEDE');
 			break;
 
-		case 0.25:
+		case (phase < 0.25):
 			moon_half_right.setFill('#DEDEDE');
 			moon_full.setFill('#000');
 			break;
 
-		case 0.375:
+		case (phase < 0.375):
 			moon_centre_elipse.setFill('#DEDEDE');
 			moon_half_right.setFill('#DEDEDE');
 			moon_full.setFill('#000');
 			break;
 
-		case 0.5:
+		case (phase < 0.5):
 			moon_full.setFill('#DEDEDE');
 			break;
 
-		case 0.625:
+		case (phase < 0.625):
 			moon_centre_elipse.setFill('#DEDEDE');
 			moon_half_left.setFill('#DEDEDE');
 			moon_full.setFill('#000');
 			break;
 
-		case 0.75:
+		case (phase < 0.75):
 			moon_half_left.setFill('#DEDEDE');
 			moon_full.setFill('#000');
 			break;
 
-		case 0.875:
+		case (phase < 0.875):
 			moon_centre_elipse.setFill('#000');
 			moon_half_right.setFill('#000');
 			moon_full.setFill('#DEDEDE');
 			break;
 
-		case 1:
+		case (phase < 1):
 			moon_full.setFill('#000');
 			break;
 	};
