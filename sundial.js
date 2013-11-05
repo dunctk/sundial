@@ -1,21 +1,27 @@
 /*! SundialJS v1.0.0 2013-11-01 by Duncan Trevithick @dunctk - MIT License */
 
 
+//Get the user's location
+
+navigator.geolocation.getCurrentPosition(GetLongitude);
+function GetLongitude(location) {
+    return(location.coords.latitude);
+}
+
+var current_time = new Date();
+
 // get today's sunlight times for London
 
-var times = SunCalc.getTimes(new Date(), 51.5, -0.1);
+var times = SunCalc.getTimes(current_time, 51.5, -0.1);
+
 
 // format sunrise time from the Date object
 
 var sunriseStr = moment(times.sunrise).format('HH:mm');
 var sunsetStr = moment(times.sunset).format('HH:mm');
 
-//Get the user's longitude
 
-navigator.geolocation.getCurrentPosition(GetLongitude);
-function GetLongitude(location) {
-    return(location.coords.latitude);
-}
+//Determine if it is currently night 
 
 function IsNightTime(){
 	var current_time = new Date();
@@ -27,6 +33,28 @@ function IsNightTime(){
 };
 
 
+//Represent a time in degrees where midnight is at the top
+
+function getDialAngle(time) {
+	var angle = (((time.getHours() * 60) + time.getMinutes()) * 0.25 ) + 90;
+	return angle;
+};	
+
+
+//Return the position along the circumference of the dial for a given time
+
+function GetDialX(time) {
+	var angle = getDialAngle(time);
+	var x = dialBase.getX() + dialBase.getRadius()  * Math.cos(angle * (Math.PI / 180));
+	return(x);
+};
+function GetDialY(time){
+	var angle = getDialAngle(time);
+	var y = dialBase.getY() + dialBase.getRadius()  * Math.sin(angle * (Math.PI / 180));
+	return y;
+};
+
+
 //Set the stage
 
 var stage = new Kinetic.Stage({
@@ -35,13 +63,6 @@ var stage = new Kinetic.Stage({
 	height: 600
 });
 
-
-function getDialAngle(time) {
-	var angle = (((time.getHours() * 60) + time.getMinutes()) * 0.25 ) + 90;
-	return angle;
-};	
-
-var current_time = new Date();
 
 // Seperate layer for dial elements
 
@@ -75,6 +96,9 @@ var dialBase = new Kinetic.Circle({
 	stroke: '#969696',
 	strokeWidth: 1
 });
+
+
+// Text on the dial
 
 var dialTimeText = new Kinetic.Text({
 	x: dialBase.getX() - 110,
@@ -125,30 +149,20 @@ var dialLocationText = new Kinetic.Text({
     align: 'center',
     text: 'London, UK'
 });
-	
-function getX(time) {
-	var angle = getDialAngle(time);
-	var x = dialBase.getX() + dialBase.getRadius()  * Math.cos(angle * (Math.PI / 180));
-	return(x);
-};
-function getY(time){
-	var angle = getDialAngle(time);
-	var y = dialBase.getY() + dialBase.getRadius()  * Math.sin(angle * (Math.PI / 180));
-	return y;
-};
+
 
 var celestial_layer = new Kinetic.Layer();
 var sun = new Kinetic.Circle({
-	x: getX(current_time),
-	y: getY(current_time),
+	x: GetDialX(current_time),
+	y: GetDialY(current_time),
 	radius: 30,
 	fill: '#f0e6a3',
 	draggable: false
 });
 
 var moon_centre_elipse = new Kinetic.Ellipse({
-	x: getX(current_time),
-	y: getY(current_time),
+	x: GetDialX(current_time),
+	y: GetDialY(current_time),
 	radius: {
 		x: 15,
 		y: 30
@@ -156,13 +170,13 @@ var moon_centre_elipse = new Kinetic.Ellipse({
 
 });
 var moon_full = new Kinetic.Circle({
-	x: getX(current_time),
-	y: getY(current_time),
+	x: GetDialX(current_time),
+	y: GetDialY(current_time),
 	radius: 30
 });
 var moon_half_left = new Kinetic.Circle({
-	x: getX(current_time),
-	y: getY(current_time),
+	x: GetDialX(current_time),
+	y: GetDialY(current_time),
 	radius: 30,
 	drawFunc: function(context) {
 		context.beginPath();
@@ -171,8 +185,8 @@ var moon_half_left = new Kinetic.Circle({
 	}
 });
 var moon_half_right = new Kinetic.Circle({
-	x: getX(current_time),
-	y: getY(current_time),
+	x: GetDialX(current_time),
+	y: GetDialY(current_time),
 	radius: 30,
 	drawFunc: function(context) {
 		context.beginPath();
@@ -181,8 +195,8 @@ var moon_half_right = new Kinetic.Circle({
 	}
 });
 var moon = new Kinetic.Group({
-	x: getX(current_time),
-	y: getY(current_time)
+	x: GetDialX(current_time),
+	y: GetDialY(current_time)
 });
 
 
@@ -279,17 +293,17 @@ setInterval(function() {onUpdateCelestialPosition() }, 1000);
 function onUpdateCelestialPosition() {
 	var current_time = new Date();
 	if (IsNightTime()){
-		moon_full.setX(getX(current_time));
-		moon_full.setY(getY(current_time));
-		moon_half_right.setX(getX(current_time));
-		moon_half_right.setY(getY(current_time));
-		moon_half_left.setX(getX(current_time));
-		moon_half_left.setY(getY(current_time));
-		moon_centre_elipse.setX(getX(current_time));
-		moon_centre_elipse.setY(getY(current_time));
+		moon_full.setX(GetDialX(current_time));
+		moon_full.setY(GetDialY(current_time));
+		moon_half_right.setX(GetDialX(current_time));
+		moon_half_right.setY(GetDialY(current_time));
+		moon_half_left.setX(GetDialX(current_time));
+		moon_half_left.setY(GetDialY(current_time));
+		moon_centre_elipse.setX(GetDialX(current_time));
+		moon_centre_elipse.setY(GetDialY(current_time));
 	} else {
-		sun.setX(getX(current_time));
-		sun.setY(getY(current_time));
+		sun.setX(GetDialX(current_time));
+		sun.setY(GetDialY(current_time));
 	};
 	
 	celestial_layer.draw();
