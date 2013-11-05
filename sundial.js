@@ -151,6 +151,8 @@ var dialLocationText = new Kinetic.Text({
 });
 
 
+//Define the sun and moon
+
 var celestial_layer = new Kinetic.Layer();
 var sun = new Kinetic.Circle({
 	x: GetDialX(current_time),
@@ -200,6 +202,8 @@ var moon = new Kinetic.Group({
 });
 
 
+
+//Select a configuration of the moon layers to show based on the current moon phase
 
 function SetMoonPhase(date){
 	var phase = SunCalc.getMoonFraction(date);
@@ -253,6 +257,7 @@ function SetMoonPhase(date){
 	};
 };
 
+
 //Decide whether to show the moon or sun
 
 if (IsNightTime()) {
@@ -265,7 +270,8 @@ if (IsNightTime()) {
 	celestial_layer.add(sun);
 }
 
-// Asign the dial elemnts to layers and draw them
+
+// Asign the dial elements to layers and draw them
 
 dialLayer.add(dialBase);
 dialLayer.add(dialDaytime);
@@ -275,7 +281,6 @@ dialLayer.add(dialTimeText);
 dialLayer.add(dialSunriseTimeText);
 dialLayer.add(dialSunsetTimeText);	
 stage.add(dialLayer);
-
 stage.add(celestial_layer);
 onUpdateTimeText();
 
