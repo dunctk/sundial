@@ -65,7 +65,6 @@ var dialDaytime = new Kinetic.Shape ({
 		context.fillStrokeShape(this);
 	}
 });
-//dialDaytime.rotate(Math.PI * 0.5);
 
 // The 'night' part of the dial
 
@@ -181,6 +180,10 @@ var moon_half_right = new Kinetic.Circle({
 		context.fillStrokeShape(this);
 	}
 });
+var moon = new Kinetic.Group({
+	x: getX(current_time),
+	y: getY(current_time)
+});
 
 // Asign the dial elemnts to layers and draw them
 
@@ -270,18 +273,23 @@ function onUpdateTimeText() {
 	dialLayer.draw();
 }
 
-setInterval(function() {onUpdateCelestialPosition() }, 30000);
+setInterval(function() {onUpdateCelestialPosition() }, 1000);
 function onUpdateCelestialPosition() {
 	var current_time = new Date();
-	/*if (IsNightTime()){
-		moon_face.setX(getX(current_time));
-		moon_face.setY(getY(current_time));
-		moon_shadow.setX(getX(current_time));
-		moon_shadow.setY(getY(current_time));
+	if (IsNightTime()){
+		moon_full.setX(getX(current_time));
+		moon_full.setY(getY(current_time));
+		moon_half_right.setX(getX(current_time));
+		moon_half_right.setY(getY(current_time));
+		moon_half_left.setX(getX(current_time));
+		moon_half_left.setY(getY(current_time));
+		moon_centre_elipse.setX(getX(current_time));
+		moon_centre_elipse.setY(getY(current_time));
 	} else {
 		sun.setX(getX(current_time));
 		sun.setY(getY(current_time));
-	}*/
+	};
+	
 	celestial_layer.draw();
 }
 
