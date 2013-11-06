@@ -171,22 +171,20 @@ var moon_centre_elipse = new Kinetic.Ellipse({
 var moon_full = new Kinetic.Circle({
 	x: GetDialX(current_time),
 	y: GetDialY(current_time),
-	radius: 30
+	radius: 29
 });
-var moon_half_left = new Kinetic.Circle({
+var moon_half_left = new Kinetic.Shape({
 	x: GetDialX(current_time),
 	y: GetDialY(current_time),
-	radius: 30,
 	drawFunc: function(context) {
 		context.beginPath();
 		context.arc(0, 0, 30, 0.5*Math.PI, 1.5*Math.PI);
 		context.fillStrokeShape(this);
 	}
 });
-var moon_half_right = new Kinetic.Circle({
+var moon_half_right = new Kinetic.Shape({
 	x: GetDialX(current_time),
 	y: GetDialY(current_time),
-	radius: 30,
 	drawFunc: function(context) {
 		context.beginPath();
 		context.arc(0, 0, 30, 1.5*Math.PI, 0.5*Math.PI);
@@ -204,7 +202,6 @@ var moon = new Kinetic.Group({
 
 function SetMoonPhase(date){
 	var phase = SunCalc.getMoonFraction(date);
-	console.log(phase);
 	switch(true) {
 		case (phase = 0):
 			moon_full.setFill('#000');
