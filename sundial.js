@@ -1,27 +1,24 @@
 /*! SundialJS v1.0.0 2013-11-01 by Duncan Trevithick @dunctk - MIT License */
 
 
-//Get the user's location
+// Get the user's location
 
 navigator.geolocation.getCurrentPosition(GetLongitude);
 function GetLongitude(location) {
     return(location.coords.latitude);
 }
 
-var current_time = new Date();
 
-// get today's sunlight times for London
+// Get sun positions for today's date
 
-var times = SunCalc.getTimes(current_time, 51.5, -0.1);
-
-
-// format sunrise time from the Date object
-
-var sunriseStr = moment(times.sunrise).format('HH:mm');
-var sunsetStr = moment(times.sunset).format('HH:mm');
+var 
+	current_time = new Date(),
+	times = SunCalc.getTimes(current_time, 51.5, -0.1),
+	sunriseStr = moment(times.sunrise).format('HH:mm'),
+	sunsetStr = moment(times.sunset).format('HH:mm');
 
 
-//Determine if it is currently night 
+// Determine if it is currently night 
 
 function IsNightTime(){
 	var current_time = new Date();
@@ -33,7 +30,7 @@ function IsNightTime(){
 };
 
 
-//Represent a time in degrees where midnight is at the top
+// Represent a time in degrees where midnight is at the top
 
 function getDialAngle(time) {
 	var angle = (((time.getHours() * 60) + time.getMinutes()) * 0.25 ) + 90;
@@ -41,7 +38,7 @@ function getDialAngle(time) {
 };	
 
 
-//Return the position along the circumference of the dial for a given time
+// Return the position along the circumference of the dial for a given time
 
 function GetDialX(time) {
 	var angle = getDialAngle(time);
@@ -55,7 +52,7 @@ function GetDialY(time){
 };
 
 
-//Set the stage
+// Set the stage
 
 var stage = new Kinetic.Stage({
 	container: 'container',
@@ -151,7 +148,7 @@ var dialLocationText = new Kinetic.Text({
 });
 
 
-//Define the sun and moon
+// Define the sun and moon
 
 var celestial_layer = new Kinetic.Layer();
 var sun = new Kinetic.Circle({
@@ -203,7 +200,7 @@ var moon = new Kinetic.Group({
 
 
 
-//Select a configuration of the moon layers to show based on the current moon phase
+// Select a configuration of the moon layers to show based on the current moon phase
 
 function SetMoonPhase(date){
 	var phase = SunCalc.getMoonFraction(date);
@@ -258,7 +255,7 @@ function SetMoonPhase(date){
 };
 
 
-//Decide whether to show the moon or sun
+// Decide whether to show the moon or sun
 
 if (IsNightTime()) {
 	celestial_layer.add(moon_full);
@@ -285,7 +282,7 @@ stage.add(celestial_layer);
 onUpdateTimeText();
 
 
-//Set time to keep the dial time updated
+// Keep the dial time updated
 
 setInterval(function() {onUpdateTimeText() }, 1000);
 function onUpdateTimeText() {
