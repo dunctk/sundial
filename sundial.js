@@ -1,13 +1,6 @@
 /*! SundialJS v1.0.0 2013-11-01 by Duncan Trevithick @dunctk - MIT License */
 
 
-// Get the user's location
-
-navigator.geolocation.getCurrentPosition(GetLongitude);
-function GetLongitude(location) {
-    return(location.coords.latitude);
-}
-
 
 // Get sun positions for today's date
 
